@@ -21,10 +21,13 @@ const songs = [
 ];
 
 let currentSongIndex = 0;
-
 let progress = document.getElementById("progress");
 let song = document.getElementById("song");
 let ctrlIcon = document.getElementById("ctrlIcon");
+
+document.getElementById("volume").oninput = function () {
+  song.volume = Math.min(Math.max(this.value, 0), 1);
+};
 
 song.onloadedmetadata = function () {
   progress.max = song.duration;
@@ -93,4 +96,64 @@ function selectSong(index) {
   song.play();
   updateIconPlaying();
 }
-song.addEventListener("ended", nextSong);
+
+const songListDiv = document.querySelector(".song-list ul");
+const burgerIcon = document.querySelector(".fa-bars");
+const songListContainer = document.querySelector(".song-list");
+
+// Создать список
+songs.forEach((songItem, index) => {
+  const li = document.createElement("li");
+  li.innerText = `${songItem.title} - ${songItem.artist}`;
+  li.onclick = () => {
+    selectSong(index);
+    songListContainer.classList.add("hidden"); // скрыть список после выбора
+  };
+  songListDiv.appendChild(li);
+});
+
+// Открыть/закрыть список + переключить иконку
+burgerIcon.parentElement.addEventListener("click", () => {
+  songListContainer.classList.toggle("hidden");
+
+  if (burgerIcon.classList.contains("fa-bars")) {
+    burgerIcon.classList.remove("fa-bars");
+    burgerIcon.classList.add("fa-xmark");
+  } else {
+    burgerIcon.classList.remove("fa-xmark");
+    burgerIcon.classList.add("fa-bars");
+  }
+});
+let isLoop = false;
+let isShuffle = false;
+
+function toggleLoop() {
+  isLoop = !isLoop;
+  song.loop = isLoop; // встроенный loop
+  document.querySelector(".btn-loop").style.backgroundColor = isLoop
+    ? "#f53192"
+    : "#fff";
+  document.querySelector(".btn-loop").style.color = isLoop ? "#fff" : "#f53192";
+}
+
+function toggleShuffle() {
+  isShuffle = !isShuffle;
+  document.querySelector(".btn-shuffle").style.backgroundColor = isShuffle
+    ? "#f53192"
+    : "#fff";
+  document.querySelector(".btn-shuffle").style.color = isShuffle
+    ? "#fff"
+    : "#f53192";
+}
+
+// Обрабатываем конец трека
+song.addEventListener("ended", () => {
+  if (isShuffle) {
+    currentSongIndex = Math.floor(Math.random() * songs.length);
+    loadSong(currentSongIndex);
+    song.play();
+    updateIconPlaying();
+  } else if (!isLoop) {
+    nextSong();
+  }
+});
