@@ -188,3 +188,10 @@ nav .circle {
 .hidden {
   display: none;
 }
+
+.screenshots {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
