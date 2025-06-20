@@ -21,7 +21,7 @@ Features dynamic playlist display, shuffle and loop functionality, and responsiv
 ## Screenshots
 
 <div class = "screenshots">
-<img src="s1.png" width="300" alt="">
- <img src="s2.png" width="300" alt="">
+<img src="s2.png" width="300" alt="">
  <img src="s3.png" width="300" alt="">
+ <img src="s1.png" width="300" alt="">
 </div>
